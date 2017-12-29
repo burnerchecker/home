@@ -13,6 +13,11 @@
     https://burnerchecker.azurewebsites.net/api/isburneremail/{email}
 </pre>
 
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
 <script>
     function checkEmail()
     {
@@ -21,22 +26,19 @@
         if (email != null && email.length > 0) {
             var url = 'https://burnerchecker.azurewebsites.net/api/isburneremail/' + email;
 
-            var data = null;
-
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-            
-            xhr.addEventListener("readystatechange", function () {
-              if (this.readyState === 4) {
-                alert(this.responseText);
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                  "Access-Control-Allow-Origin": "*",
+                  "Cache-Control": "no-cache"                }
               }
-            });
-            
-            xhr.open("GET", url);
-            xhr.setRequestHeader("Cache-Control", "no-cache");
-            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-            
-            xhr.send(data);
+              
+              $.ajax(settings).done(function (response) {
+                alert(response);
+              });
         }
         else {
             alert("Please enter an email address!");
