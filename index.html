@@ -1,0 +1,42 @@
+<h1> Welcome to Burner Checker.</h1>
+<h2> Ever wondered if the email a user used is a burner?</h2>
+
+<div>
+    <label for="Email">Enter an Email address </label>
+    <input type="email" id="txtEmail" name="Email" required>
+</div>
+<div>
+    <button id="btnCheck" onclick="checkEmail()" >Check</button>
+</div>
+
+
+<script>
+    function checkEmail()
+    {
+        var email = document.getElementById("txtEmail").value;
+
+        if (email != null && email.length > 0) {
+            var url = 'https://burnerchecker.azurewebsites.net/api/isburneremail/' + email;
+
+            var data = null;
+
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            
+            xhr.addEventListener("readystatechange", function () {
+              if (this.readyState === 4) {
+                console.log(this.responseText);
+              }
+            });
+            
+            xhr.open("GET", url);
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            
+            xhr.send(data);
+        }
+        else {
+            alert("Please enter an email address!");
+        }
+    }
+</script>
