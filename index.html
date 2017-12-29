@@ -4,14 +4,34 @@
 <div>
     <label for="Email">Enter an Email address </label>
     <input type="email" id="txtEmail" name="Email" required>
-</div>
-<div>
     <button id="btnCheck" onclick="checkEmail()" >Check</button>
 </div>
 
-<pre>
-    https://burnerchecker.azurewebsites.net/api/isburneremail/{email}
-</pre>
+<div>
+    <span id="result">
+
+    </span>
+</div>
+
+<div>
+    <h2>You can add the email checker to any form.</h2>
+    <h3>Use the endpoint bellow, by replacing <strong>{email}</strong> with the email address you want to check.</h3>
+</div>
+
+<p id="pAPI">https://burnerchecker.azurewebsites.net/api/isburneremail/{email}</p>
+<button onclick="CopyToClip()">Copy</button>
+
+<hr />
+
+<h2>
+   Did you find a domain not on our list?
+</h2>
+
+<div>
+    <label for="SuggestedBurnerEmail">Send us the domain ⭐ </label>
+    <input type="email" id="txtSuggestedBurnerEmail" name="SuggestedBurnerEmail" required>
+    <button id="btnSuggestedBurnerEmail" onclick="sendSuggestion()" >Send</button>
+</div>
 
 <script
   src="https://code.jquery.com/jquery-2.2.4.min.js"
@@ -19,6 +39,70 @@
   crossorigin="anonymous"></script>
 
 <script>
+    function CopyToClip() {
+        var copyText = document.getElementById("pAPI");
+
+        var range = document.createRange();  
+        range.selectNode(copyText);  
+        window.getSelection().addRange(range); 
+
+        try {  
+            // Now that we've selected the anchor text, execute the copy command  
+            var successful = document.execCommand('copy');  
+            var msg = successful ? 'successful' : 'unsuccessful';  
+            console.log('Copy command was ' + msg);  
+        } catch(err) {  
+            console.log('Oops, unable to copy');  
+        }  
+
+        // Remove the selections - NOTE: Should use
+        // removeRange(range) when it is supported  
+        window.getSelection().removeAllRanges();
+    }
+
+    $('#txtEmail').keypress(function (e) {
+        var key = e.which;
+        if(key == 13)  // the enter key code
+        {
+            $('#btnCheck').click();
+            return false;  
+        }
+    });
+
+    $('#txtSuggestedBurnerEmail').keypress(function (e) {
+        var key = e.which;
+        if(key == 13)  // the enter key code
+        {
+            $('#btnSuggestedBurnerEmail').click();
+            return false;  
+        }
+    });
+
+    function sendSuggestion()
+    {
+        var email = document.getElementById("txtSuggestedBurnerEmail").value;
+
+        if (email != null && email.length > 0) {
+            var url = "https://hooks.zapier.com/hooks/catch/2830923/8he4jx/?email=" + email;
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                }
+              }
+              
+              $.ajax(settings).done(function (response) {
+                alert("Thank you!");
+              });
+        }
+        else {
+            alert("Please enter an email address!");
+        }
+    }
+
     function checkEmail()
     {
         var email = document.getElementById("txtEmail").value;
@@ -37,11 +121,25 @@
               }
               
               $.ajax(settings).done(function (response) {
-                alert(response);
+                handleReslt(response);
               });
         }
         else {
             alert("Please enter an email address!");
+        }
+    }
+
+    function handleReslt(value)
+    {
+        if (value === true) {
+            $('#result').html("It is a burner! 🔥")
+        }
+        else if (value === false) {
+            $('#result').html("Normal Email 🌊")
+        }
+        else 
+        {
+            $('#result').html(value);
         }
     }
 </script>
