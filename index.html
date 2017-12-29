@@ -9,6 +9,9 @@
     <button id="btnCheck" onclick="checkEmail()" >Check</button>
 </div>
 
+<pre>
+    https://burnerchecker.azurewebsites.net/api/isburneremail/{email}
+</pre>
 
 <script>
     function checkEmail()
@@ -25,7 +28,7 @@
             
             xhr.addEventListener("readystatechange", function () {
               if (this.readyState === 4) {
-                console.log(this.responseText);
+                alert(responseText);
               }
             });
             
